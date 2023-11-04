@@ -19,6 +19,11 @@
 
 #include "entity.h"
 #include "agumon.h"
+#include "Flying.h"
+#include "Runner.h"
+#include "Ranged.h"
+#include "Tank.h"
+#include "Sniper.h"
 #include "player.h"
 #include "world.h"
 
@@ -68,9 +73,19 @@ int main(int argc,char *argv[])
     mouse = gf2d_sprite_load("images/pointer.png",32,32, 16);
     
     
-    agu = agumon_new(vector3d(0 ,0,0));
-    if (agu)agu->selected = 1;
     w = world_load("config/testworld.json");
+
+    Entity* flyingEnemy = flying_new(vector3d(10, 10, 10)); 
+    Entity* runnerEnemy = runner_new(vector3d(20, 20, 20)); 
+    Entity* tankEnemy = tank_new(vector3d(30, 30, 30));     
+    Entity* rangedEnemy = ranged_new(vector3d(40, 40, 40)); 
+    Entity* sniperEnemy = sniper_new(vector3d(50, 50, 50)); 
+
+    world_add_entity(w, flyingEnemy);
+    world_add_entity(w, runnerEnemy);
+    world_add_entity(w, tankEnemy);
+    world_add_entity(w, rangedEnemy);
+    world_add_entity(w, sniperEnemy);
     
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();

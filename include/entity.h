@@ -27,9 +27,10 @@ typedef struct Entity_S
     Uint8       selected;
     Color       selectedColor;      /**<Color for highlighting*/
     
-    Box         bounds; // for collisions
     int         team;  //same team dont clip
     int         clips;  // if false, skip collisions
+    int         player;
+    int         enemy;
 
     void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
     void       (*update)(struct Entity_S *self); /**<pointer to the update function*/

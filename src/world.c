@@ -91,7 +91,15 @@ void world_run_updates(World *self)
 
 }
 
-void world_add_entity(World *world,Entity *entity);
+void world_add_entity(World* world, Entity* entity)
+{
+    if (!world || !entity) return;
+    if (!world->entityList)
+    {
+        world->entityList = gfc_list_new();
+    }
+    world->entityList = gfc_list_append(world->entityList, entity);
+}
 
 Vector3D get_World_Bounding_Box_Max(Vector3D size, Vector3D position)
 {
