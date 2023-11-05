@@ -74,18 +74,14 @@ int main(int argc,char *argv[])
     
     
     w = world_load("config/testworld.json");
+    world_add_entity(w, vector3d(10,20,50));
+    //world_add_entity(w, vector3d(50,60,0));
 
     Entity* flyingEnemy = flying_new(vector3d(10, 10, 10)); 
     Entity* runnerEnemy = runner_new(vector3d(20, 20, 20)); 
     Entity* tankEnemy = tank_new(vector3d(30, 30, 30));     
     Entity* rangedEnemy = ranged_new(vector3d(40, 40, 40)); 
     Entity* sniperEnemy = sniper_new(vector3d(50, 50, 50)); 
-
-    world_add_entity(w, flyingEnemy);
-    world_add_entity(w, runnerEnemy);
-    world_add_entity(w, tankEnemy);
-    world_add_entity(w, rangedEnemy);
-    world_add_entity(w, sniperEnemy);
     
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();
@@ -93,13 +89,6 @@ int main(int argc,char *argv[])
     player_new(vector3d(0,0,0));
     
     
-    for (a = 0; a < 100; a++)
-    {
-        particle[a].position = vector3d(gfc_crandom() * 100,gfc_crandom() * 100,gfc_crandom() * 100);
-        particle[a].color = gfc_color(0,0,0,1);
-//        particle[a].color = gfc_color(gfc_random(),gfc_random(),gfc_random(),1);
-        particle[a].size = 100 * gfc_random();
-    }
     a = 0;
     sky = gf3d_model_load("models/sky.model");
     gfc_matrix_identity(skyMat);

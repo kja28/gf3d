@@ -137,7 +137,7 @@ void entity_update(Entity *self, float deltaTime)
     gfc_matrix_scale(self->modelMat,self->scale);
     gfc_matrix_rotate_by_vector(self->modelMat,self->modelMat,self->rotation);
     gfc_matrix_translate(self->modelMat,self->position);
-    slog("Grounded: %d: ", self->grounded);
+    //slog("Grounded: %d: ", self->grounded);
     if (self->update) self->update(self, deltaTime);
 }
 
@@ -175,7 +175,7 @@ void entity_update_all(float deltaTime)
                 // Entities will stop falling when colliding with the world
                 entity_manager.entity_list[i].grounded = 1;
                 //slog("Grounded: %d, Velocity: %f", entity_manager.entity_list[i].grounded, entity_manager.entity_list[i].velocity.z);
-                entity_manager.entity_list[i].position.z = world->worldBoundingBox.min.z - entity_manager.entity_list[i].size.z / 2;
+                //entity_manager.entity_list[i].position.z = world->worldBoundingBox.min.z - entity_manager.entity_list[i].size.z / 2;
                 entity_manager.entity_list[i].velocity.z = 0;
             }
             

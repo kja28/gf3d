@@ -1,7 +1,7 @@
 {
     "model":
     {
-        "model":"models/antioch/antioch.obj",
-        "texture":"models/antioch/antioch.png"
+        "model":"models/antioch/testlevel.obj",
+        "texture":"models/antioch/testlevel.png"
     }
 }

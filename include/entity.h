@@ -31,6 +31,7 @@ typedef struct Entity_S
     int         clips;  // if false, skip collisions
     int         player;
     int         enemy;
+    int         grounded;
 
     void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
     void       (*update)(struct Entity_S *self); /**<pointer to the update function*/
@@ -44,7 +45,7 @@ typedef struct Entity_S
     Vector3D    velocity;
     Vector3D    acceleration;
     Vector3D    size; // size of the entity for the bounding box
-    int         grounded;
+    
 
         
     Vector3D    scale;
@@ -134,4 +135,23 @@ int bounding_box_collision(Entity* a, Entity* b);
  * @param World b
  */
 int world_bounding_box_collision(Entity* a, World* b);
+
+void chase_player(Entity* self);
+
+int player_in_range(Entity* self);
+
+int player_in_range_sniper(Entity* self);
+
+void enemy_dead(Entity* self);
+
+void enemy_attack_flying(Entity* self);
+
+void enemy_attack_tank(Entity* self);
+
+void enemy_attack_sniper(Entity* self);
+
+void enemy_attack_ranged(Entity* self);
+
+void enemy_attack_runner(Entity* self);
+
 #endif

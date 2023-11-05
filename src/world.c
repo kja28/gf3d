@@ -58,7 +58,7 @@ World *world_load(char *filename)
     sj_value_as_vector3d(sj_object_get_value(wjson,"rotation"),&w->rotation);
     sj_free(json);
     w->color = gfc_color(1,1,1,1);
-    w->size = gf3d_get_model_size_from_obj("models/antioch/antioch.obj");
+    w->size = gf3d_get_model_size_from_obj("models/antioch/testlevel.obj");
     w->worldBoundingBox.min = get_World_Bounding_Box_Min(w->size, w->position);
     w->worldBoundingBox.max = get_World_Bounding_Box_Max(w->size, w->position);
     current_world = w;
@@ -91,14 +91,21 @@ void world_run_updates(World *self)
 
 }
 
-void world_add_entity(World* world, Entity* entity)
-{
-    if (!world || !entity) return;
-    if (!world->entityList)
+void world_add_entity(World* world, Vector3D position) {
+    Entity* entity = NULL;
+    entity = entity_new(); 
+
+    if (!world || !entity)
     {
-        world->entityList = gfc_list_new();
+        slog("there is no world or entity");
+        return;
     }
-    world->entityList = gfc_list_append(world->entityList, entity);
+    entity->model = gf3d_model_load("models/platform.model");
+    entity->position = position;
+    entity->size = gf3d_get_model_size_from_obj("models/antioch/platform.obj");
+    entity->boundingBox.min = get_Bounding_Box_Min(entity->size, entity->position);
+    entity->boundingBox.max = get_Bounding_Box_Max(entity->size, entity->position);
+
 }
 
 Vector3D get_World_Bounding_Box_Max(Vector3D size, Vector3D position)

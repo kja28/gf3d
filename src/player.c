@@ -5,7 +5,7 @@
 #include "player.h"
 #include "world.h"
 
-#define GRAVITY -0.0000000000000000000981f
+#define GRAVITY -0.00000000000000000000981f
 
 static int thirdPersonMode = 1;
 void player_think(Entity *self);
@@ -25,6 +25,8 @@ Entity *player_new(Vector3D position)
     ent->model = gf3d_model_load("models/dino.model");
     ent->think = player_think;
     ent->update = player_update;
+    ent->player = 1;
+    ent->enemy = 0;
     vector3d_copy(ent->position,position);
     ent->size = gf3d_get_model_size_from_obj("models/dino/dino.obj");
     ent->boundingBox.min = get_Bounding_Box_Min(ent->size, ent->position);
@@ -104,11 +106,12 @@ void player_update(Entity* self, float deltaTime)
     if (!self->grounded)
     {
         //slog("not grounded yet");
-        self->velocity.z = GRAVITY ; // Apply gravity continuously
+        self->velocity.z += GRAVITY; 
     }
     else
     {
         //slog("grounded");
+        self->velocity.z = 0;
         self->position.z = world->worldBoundingBox.min.z - self->size.z / 2; // Adjust position to be on the ground
         //self->velocity.z *= 1000.0f; // Apply damping to the velocity
     }

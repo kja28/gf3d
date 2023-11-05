@@ -2,7 +2,7 @@
     "world":
     {
         "model":"models/antioch.model",
-        "position":[0,0,600],
+        "position":[0,0,100],
         "scale":[1,1,1],
         "rotation":[0,0.001,0.001]
     }

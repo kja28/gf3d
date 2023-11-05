@@ -22,7 +22,7 @@ typedef struct World
     Model *model;
     Color color;
     List *spawnList;        //entities to spawn
-    List *entityList;       //entities that exist in the world+
+    Entity *entityList;       //entities that exist in the world+
     struct {
         Vector3D min;
         Vector3D max;
@@ -37,7 +37,7 @@ void world_delete(World *world);
 
 void world_run_updates(World *world);
 
-void world_add_entity(World *world,Entity *entity);
+void world_add_entity(World* world, Vector3D position);
 
 Vector3D get_World_Bounding_Box_Min(Vector3D size, Vector3D position);
 
