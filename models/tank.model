@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/Enemy/ICE.obj",
+        "texture":"models/Enemy/testlevel.png"
+    }
+}

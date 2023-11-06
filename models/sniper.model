@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/Enemy/Procedural_Eyes.blend.obj",
+        "texture":"models/Enemy/testlevel.png"
+    }
+}

@@ -9,6 +9,7 @@
 #include "gf3d_texture.h"
 #include "gf2d_sprite.h"
 #include "gf2d_font.h"
+#include "player.h"
 
 typedef struct
 {
@@ -633,6 +634,30 @@ void gf2d_font_draw_text_wrap(
     }while(1);
     
 }
+
+void updateUI()
+{
+    Entity* player = get_global_player();
+
+    gf2d_draw_rect_filled(gfc_rect(10, 50, 200, 32), gfc_color8(128, 0, 0, 255));
+    char healthText[256];
+    sprintf(healthText, "Health: %d", player->health);
+    gf2d_font_draw_line_tag(healthText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 50));
+
+    gf2d_draw_rect_filled(gfc_rect(10, 90, 200, 32), gfc_color8(0, 0, 128, 255)); 
+    char manaText[256];
+    sprintf(manaText, "Mana: %d ", player->mana);
+    gf2d_font_draw_line_tag(manaText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 90));
+
+    char rareText[256];
+    sprintf(rareText, "Tokens: %d", player->rare);
+    gf2d_font_draw_line_tag(rareText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 130));
+
+    char pointsText[256];
+    sprintf(pointsText, "Skill Points: %d", player->points);
+    gf2d_font_draw_line_tag(pointsText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 170));
+}
+
 
 
 /*eol@eof*/

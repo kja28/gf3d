@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/Enemy/SpaceElemental.obj",
+        "texture":"models/Enemy/testlevel.png"
+    }
+}

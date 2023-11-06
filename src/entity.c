@@ -151,7 +151,7 @@ void entity_update_all(float deltaTime)
         {
             continue;// skip this iteration of the loop
         }
-        entity_manager.entity_list[i].grounded = 0;
+        //entity_manager.entity_list[i].grounded = 0;
         // scans through every entity and checks collision
         for (j = 0; j < entity_manager.entity_count; j++)
         {
@@ -163,11 +163,9 @@ void entity_update_all(float deltaTime)
 
             if (bounding_box_collision(&entity_manager.entity_list[i], &entity_manager.entity_list[j]))
             {
-                // Just stops the entities from moving if they collide
+                // Detects if something was hit
                 //slog("Hitting something");
-                entity_manager.entity_list[i].velocity.x = 0;
-                entity_manager.entity_list[i].velocity.y = 0;
-                entity_manager.entity_list[i].velocity.z = 0;
+                entity_manager.entity_list[i].hit = 1;
             }
             // scans entities and compares with world bounding box for collision with world 
             if (world_bounding_box_collision(&entity_manager.entity_list[i], world))
@@ -204,6 +202,7 @@ Vector3D get_Bounding_Box_Min(Vector3D size, Vector3D position)
 
 int bounding_box_collision(Entity* a, Entity* b)
 {
+    // Existing collision detection logic
     if ((a->boundingBox.max.x < b->boundingBox.min.x || a->boundingBox.min.x > b->boundingBox.max.x) &&
         (a->boundingBox.max.y < b->boundingBox.min.y || a->boundingBox.min.y > b->boundingBox.max.y) &&
         (a->boundingBox.max.z < b->boundingBox.min.z || a->boundingBox.min.z > b->boundingBox.max.z))

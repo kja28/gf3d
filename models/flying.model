@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/Enemy/big_bird.obj",
+        "texture":"models/Enemy/testlevel.png"
+    }
+}

@@ -123,4 +123,8 @@ Rect gf2d_font_get_text_wrap_bounds_tag(
 Vector2D gf2d_font_get_bounds_tag(char *text,FontTypes tag);
 Vector2D gf2d_font_get_bounds(char *text,Font *font);
 
+void updateUI();
+
+
+
 #endif

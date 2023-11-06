@@ -32,11 +32,19 @@ typedef struct Entity_S
     int         player;
     int         enemy;
     int         grounded;
+    int         hit;
+    Uint32      damage;
+    float       speed;
+    int         mana; 
+    int         points;
+    int         money;
+    int         rare;
+    float       jumpCooldown;
 
     void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
     void       (*update)(struct Entity_S *self); /**<pointer to the update function*/
     void       (*draw)(struct Entity_S *self); /**<pointer to an optional extra draw funciton*/
-    void       (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
+    //void       (*damage)(struct Entity_S *self, float damage, struct Entity_S *inflictor); /**<pointer to the think function*/
     void       (*onDeath)(struct Entity_S *self); /**<pointer to an funciton to call when the entity dies*/
     
     EntityState state;
@@ -136,17 +144,7 @@ int bounding_box_collision(Entity* a, Entity* b);
  */
 int world_bounding_box_collision(Entity* a, World* b);
 
-void chase_player(Entity* self);
-
-int player_in_range(Entity* self);
-
 int player_in_range_sniper(Entity* self);
-
-void enemy_dead(Entity* self);
-
-void enemy_attack_flying(Entity* self);
-
-void enemy_attack_tank(Entity* self);
 
 void enemy_attack_sniper(Entity* self);
 

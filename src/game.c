@@ -31,13 +31,13 @@ extern int __DEBUG;
 
 int main(int argc,char *argv[])
 {
-    const int FPS = 60;
+    const int FPS = 120;
     const int frameDelay = 1000 / FPS; 
 
-    Uint32 frameStart;
-    int frameTime;
-    Uint32 startTime, endTime;
-    float deltaTime = 0.0f;
+    Uint32 lastTime = SDL_GetTicks(); // Initialize lastTime
+    Uint32 frameStart; // Declare frameStart
+    float deltaTime;
+    
     int done = 0;
     int a;
     
@@ -74,20 +74,19 @@ int main(int argc,char *argv[])
     
     
     w = world_load("config/testworld.json");
-    world_add_entity(w, vector3d(10,20,50));
+    world_add_entity(w, vector3d(18.369612, -273.992004, 30));
     //world_add_entity(w, vector3d(50,60,0));
 
-    Entity* flyingEnemy = flying_new(vector3d(10, 10, 10)); 
-    Entity* runnerEnemy = runner_new(vector3d(20, 20, 20)); 
-    Entity* tankEnemy = tank_new(vector3d(30, 30, 30));     
-    Entity* rangedEnemy = ranged_new(vector3d(40, 40, 40)); 
-    Entity* sniperEnemy = sniper_new(vector3d(50, 50, 50)); 
+    Entity* flyingEnemy = flying_new(vector3d(290.635956, 283.653931, 75.517830)); 
+    Entity* runnerEnemy = runner_new(vector3d(-308.503448, 286.106750, 75.517830));
+    Entity* tankEnemy = tank_new(vector3d(-317.469635, -288.340607, 75.517830));
+    Entity* rangedEnemy = ranged_new(vector3d(314.827820, -272.427460, 75.517830));
+    Entity* sniperEnemy = sniper_new(vector3d(18.369612, -273.992004, 10));
     
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));
-    player_new(vector3d(0,0,0));
-    
+    player_new(vector3d(0.000000, 0.000000, 75.517830));
     
     a = 0;
     sky = gf3d_model_load("models/sky.model");
@@ -99,7 +98,19 @@ int main(int argc,char *argv[])
     while(!done)
     {
         frameStart = SDL_GetTicks();
-        startTime = SDL_GetTicks();
+
+        Uint32 currentTime = SDL_GetTicks();
+        const char* sdlError = SDL_GetError();
+        if (sdlError && *sdlError) {
+            slog("SDL_GetTicks Error: %s", sdlError);
+            SDL_ClearError();
+        }
+        deltaTime = (currentTime - lastTime) / 1000.0f; // Convert to seconds
+        lastTime = currentTime;
+        if (deltaTime < 0) {
+            deltaTime = 0;
+        }
+
         gfc_input_update();
         gf2d_font_update();
         SDL_GetMouseState(&mousex,&mousey);
@@ -128,15 +139,15 @@ int main(int argc,char *argv[])
                 gf2d_font_draw_line_tag("Press ALT+F4 to exit",FT_H1,gfc_color(1,1,1,1), vector2d(10,10));
                 
                 gf2d_draw_rect(gfc_rect(10 ,10,1000,32),gfc_color8(255,255,255,255));
-                
                 gf2d_sprite_draw(mouse,vector2d(mousex,mousey),vector2d(2,2),vector3d(8,8,0),gfc_color(0.3,.9,1,0.9),(Uint32)mouseFrame);
+                updateUI();
         gf3d_vgraphics_render_end();
-        endTime = SDL_GetTicks();
-        deltaTime = (endTime - startTime) / 1000.0f;
+        
         //slog("This is deltatime: %.6f", deltaTime);
-        frameTime = SDL_GetTicks() - frameStart;
-        if (frameDelay > frameTime) {
-            SDL_Delay(frameDelay - frameTime);
+        Uint32 frameEnd = SDL_GetTicks();
+        Uint32 frameDuration = frameEnd - frameStart;
+        if (frameDelay > frameDuration) {
+            SDL_Delay(frameDelay - frameDuration);
         }
 
         if (gfc_input_command_down("exit"))done = 1; // exit condition

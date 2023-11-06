@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/Enemy/spider_lite_.obj",
+        "texture":"models/Enemy/testlevel.png"
+    }
+}
