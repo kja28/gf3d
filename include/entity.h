@@ -37,12 +37,22 @@ typedef struct Entity_S
     int         hit;
     int         lifespan;
     Uint32      damage;
-
     float       speed;
-    int         mana; 
-    int         points;
+    
+    int         mana;
     int         money;
     int         rare;
+    int         health;
+    int         invinsible;
+
+    int         healthp;
+    int         manap; 
+    int         invinsiblep;
+    int         coin;
+    int         book;
+
+    int         lockhealth;
+    int         saved;
 
     float       jumpCooldown;
     float       magicmcd;
@@ -82,7 +92,6 @@ typedef struct Entity_S
     Vector3D    scale;
     Vector3D    rotation;
     
-    Uint32      health;     /**<entity dies when it reaches zero*/
     // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
     struct Entity_S *target;    /**<entity to target for weapons / ai*/
     

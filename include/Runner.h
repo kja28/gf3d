@@ -3,7 +3,7 @@
 
 #include "entity.h"
 
-#define RUNNER_DETECT_RANGE 400.0f
+#define RUNNER_DETECT_RANGE 200.0f
 #define RUNNER_COLLISION_RANGE 50.0f
 #define RUNNER_SPEED 2.5f
 /**

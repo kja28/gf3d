@@ -31,9 +31,9 @@ Entity *player_new(Vector3D position)
     ent->player = 1;
     ent->enemy = 0;
     ent->mana = 20;
-    ent->points = 0;
-    ent->money = 0;
+    ent->money = 1;
     ent->rare = 0;
+    ent->saved = 0;
     ent->jumpCooldown = 0.0f;
     vector3d_copy(ent->position,position);
     ent->size = gf3d_get_model_size_from_obj("models/dino/dino.obj");
@@ -361,6 +361,16 @@ void player_update(Entity* self, float deltaTime)
         self->reverse = 0;
     }
 
+    if (self->invinsible && !self->saved)
+    {
+        self->lockhealth = self->health;
+        self->saved = 1;
+    }
+    else if (self->invinsible && self->saved)
+    {
+        self->health = self->lockhealth;
+    }
+
     if (!self->grounded)
     {
         if (self->slow)
@@ -382,7 +392,7 @@ void player_update(Entity* self, float deltaTime)
     nextPosition.y += self->velocity.y * fixedTimestep;
     nextPosition.z += self->velocity.z * fixedTimestep;
 
-    if (check_collision_with_world(nextPosition, world) && !self->grounded) 
+    if (check_collision_with_world(nextPosition, world) ) 
     {
         handle_collision_response(self,  nextPosition, world);
         //slog("Grounded: %f, %f, %f, %d", self->position.x, self->position.y, self->position.z, self->grounded);
@@ -393,6 +403,7 @@ void player_update(Entity* self, float deltaTime)
         platform_collision(self, nextPosition);
         if (!self->grounded)
         {
+            //slog("hi there");
             self->position = nextPosition;
         }
     }

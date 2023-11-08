@@ -26,6 +26,7 @@
 #include "Sniper.h"
 #include "player.h"
 #include "world.h"
+#include "Collectables.h"
 
 extern int __DEBUG;
 
@@ -75,14 +76,22 @@ int main(int argc,char *argv[])
     
     w = world_load("config/testworld.json");
     world_add_entity(w, vector3d(18.369612, -273.992004, 30));
+    world_add_entity(w, vector3d(18.369612, -300.992004, 0));
+    world_add_entity(w, vector3d(18.369612, -400.992004, -30));
+    mana_potion(vector3d(-100.000000, 0.000000, 75.517830));
+    health_potion(vector3d(100.000000, 0.000000, 75.517830));
+    rare_item(vector3d(18.369612, -300.992004, -20));
+    money(vector3d(0.000000, 100.0000, 75.517830));
+    invinsible_potion(vector3d(0.000000, -100.0000, 75.517830));
+
     //world_add_entity(w, vector3d(50,60,0));
 
     Entity* flyingEnemy = flying_new(vector3d(290.635956, 283.653931, 75.517830)); 
-    Entity* runnerEnemy = runner_new(vector3d(-308.503448, 286.106750, 75.517830));
+    Entity* runnerEnemy = runner_new(vector3d(314.827820, -272.427460, 75.517830));
     Entity* tankEnemy = tank_new(vector3d(-317.469635, -288.340607, 75.517830));
-    Entity* rangedEnemy = ranged_new(vector3d(314.827820, -272.427460, 75.517830));
+    Entity* rangedEnemy = ranged_new(vector3d(-308.503448, 286.106750, 75.517830));
     Entity* sniperEnemy = sniper_new(vector3d(18.369612, -273.992004, 10));
-    
+
     SDL_SetRelativeMouseMode(SDL_TRUE);
     slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));

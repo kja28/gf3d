@@ -3,7 +3,7 @@
 #include "world.h"
 #include "player.h"
 
-#define GRAVITY -0.0000000000000000000981f
+#define GRAVITY 9.81f
 void runner_update(Entity* self, float deltaTime);
 
 void runner_think(Entity* self);
@@ -129,7 +129,7 @@ void hunt_player_runner(Entity* self, Vector3D playerPosition)
     Vector3D direction;
     vector3d_sub(direction, playerPosition, self->position);
     vector3d_normalize(&direction);
-    vector3d_scale(self->velocity, -direction, 0.00000000000000000005f);
+    vector3d_scale(self->velocity, direction, 5.0f);
 
     vector3d_add(self->position, self->position, self->velocity);
 }

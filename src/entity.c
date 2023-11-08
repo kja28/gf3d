@@ -235,15 +235,13 @@ void platform_collision(Entity* self, Vector3D nextPosition)
 
 int check_collision_with_platform(Vector3D nextPosition, Entity* platform)
 {
+    if (nextPosition.x >= platform->boundingBox.min.x && nextPosition.x <= platform->boundingBox.max.x &&
+        nextPosition.y >= platform->boundingBox.min.y && nextPosition.y <= platform->boundingBox.max.y &&
+        nextPosition.z >= platform->boundingBox.min.z && nextPosition.z <= platform->boundingBox.max.z)
     {
-        if (nextPosition.x < platform->boundingBox.min.x || nextPosition.x > platform->boundingBox.max.x ||
-            nextPosition.y < platform->boundingBox.min.y || nextPosition.y > platform->boundingBox.max.y ||
-            nextPosition.z > platform->boundingBox.min.z || nextPosition.z < platform->boundingBox.max.z)
-        {
-            return 1;
-        }
-        return 0;
+        return 1; // Collision detected
     }
+    return 0; // No collision
 }
 
 void handle_platform_collision_response(Entity* self, Vector3D nextPosition, Entity* platform)

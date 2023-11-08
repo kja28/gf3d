@@ -649,13 +649,15 @@ void updateUI()
     sprintf(manaText, "Mana: %d ", player->mana);
     gf2d_font_draw_line_tag(manaText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 90));
 
+    gf2d_draw_rect_filled(gfc_rect(10, 10, 1000, 32), gfc_color8(128, 128, 128, 255));
     char rareText[256];
     sprintf(rareText, "Tokens: %d", player->rare);
     gf2d_font_draw_line_tag(rareText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 130));
 
-    char pointsText[256];
-    sprintf(pointsText, "Skill Points: %d", player->points);
-    gf2d_font_draw_line_tag(pointsText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 170));
+    gf2d_draw_rect_filled(gfc_rect(10, 10, 1000, 32), gfc_color8(128, 128, 128, 255));
+    char moneyText[256];
+    sprintf(moneyText, "Money: %d", player->money);
+    gf2d_font_draw_line_tag(moneyText, FT_H1, gfc_color(1, 1, 1, 1), vector2d(10, 170));
 }
 
 
