@@ -8,6 +8,7 @@
 #include "gf3d_model.h"
 
 typedef struct World World;
+
 typedef enum
 {
     ES_idle = 0,
@@ -31,15 +32,37 @@ typedef struct Entity_S
     int         clips;  // if false, skip collisions
     int         player;
     int         enemy;
+    int         platform;
     int         grounded;
     int         hit;
+    int         lifespan;
     Uint32      damage;
+
     float       speed;
     int         mana; 
     int         points;
     int         money;
     int         rare;
+
     float       jumpCooldown;
+    float       magicmcd;
+    float       firebcd;
+    float       magicacd;
+    float       icebcd;
+    float       paracd;
+    float       telecd;
+    float       slowcd;
+    float       reversecd;
+    float       quickcd;
+
+    int         frost;
+    int         stun;
+    int         frostEffect;
+    int         paraEffect;
+    int         numjumps;
+    int         slow;
+    int         quick;
+    int         reverse;
 
     void       (*think)(struct Entity_S *self); /**<pointer to the think function*/
     void       (*update)(struct Entity_S *self); /**<pointer to the update function*/
@@ -69,6 +92,13 @@ typedef struct Entity_S
         Vector3D max;
     }boundingBox;
 }Entity;
+
+typedef struct EntityManager_S
+{
+    Entity* entity_list;
+    Uint32  entity_count;
+
+}EntityManager;
 
 /**
  * @brief initializes the entity subsystem
@@ -151,5 +181,17 @@ void enemy_attack_sniper(Entity* self);
 void enemy_attack_ranged(Entity* self);
 
 void enemy_attack_runner(Entity* self);
+
+int check_collision_with_world(Vector3D nextPosition, World* world);
+
+void handle_collision_response(Entity* self, Vector3D nextPosition, World* world);
+
+void platform_collision(Entity* self, Vector3D nextPosition);
+
+int check_collision_with_platform(Vector3D nextPosition, Entity* platform);
+
+void handle_platform_collision_response(Entity* self, Vector3D nextPosition, Entity* platform);
+
+EntityManager *get_entity_manager();
 
 #endif

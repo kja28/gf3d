@@ -17,4 +17,6 @@ void enemy_attack_sniper(Entity* self, Vector3D playerPosition);
 
 void enemy_dead_sniper(Entity* self);
 
+void projectile_update(Entity* projectile, float deltaTime);
+
 #endif

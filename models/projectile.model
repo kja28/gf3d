@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/Enemy/projectile.obj",
+        "texture":"models/antioch/platform.png"
+    }
+}

@@ -5,8 +5,9 @@
 #include "player.h"
 #include "world.h"
 #include "gf2d_font.h"
+#include "Abilities.h"
 
-#define GRAVITY -0.0000000000000000000000000000000000981f
+#define GRAVITY 90.81f
 
 static int thirdPersonMode = 1;
 Entity* global_player = NULL;
@@ -45,6 +46,7 @@ Entity *player_new(Vector3D position)
     ent->rotation.z = -GFC_HALF_PI*0.125;
     ent->health = 40;
     ent->hidden = 0;
+    ent->numjumps = 3;
     global_player = ent;
     return ent;
 }
@@ -71,30 +73,241 @@ void player_think(Entity* self)
     //foward
     if (keys[SDL_SCANCODE_W])
     {
-        vector3d_add(self->position, self->position, -forward);
+        if (self->quick)
+        {
+            Vector3D quickforward = vector3d(0, 0, 0);
+            quickforward.x = forward.x * 2;
+            quickforward.y = forward.y * 2;
+            quickforward.z = forward.z * 2;
+            vector3d_add(self->position, self->position, -quickforward);
+        }
+        else
+        {
+            vector3d_add(self->position, self->position, -forward);
+        }
     }
     //backward
     if (keys[SDL_SCANCODE_S])
     {
-        vector3d_add(self->position, self->position, forward);
+        if (self->quick)
+        {
+            Vector3D quickforward = vector3d(0, 0, 0);
+            quickforward.x = forward.x * 2;
+            quickforward.y = forward.y * 2;
+            quickforward.z = forward.z * 2;
+            vector3d_add(self->position, self->position, quickforward);
+        }
+        else
+        {
+            vector3d_add(self->position, self->position, forward);
+        }
     }
     //right
     if (keys[SDL_SCANCODE_D])
     {
-        vector3d_add(self->position, self->position, right);
+        if (self->quick)
+        {
+            Vector3D quickright = vector3d(0, 0, 0);
+            quickright.x = right.x * 2;
+            quickright.y = right.y * 2;
+            quickright.z = right.z * 2;
+            vector3d_add(self->position, self->position, quickright);
+        }
+        else
+        {
+            vector3d_add(self->position, self->position, right);
+        }
     }
     //left
     if (keys[SDL_SCANCODE_A])
     {
-        vector3d_add(self->position, self->position, -right);
+        if (self->quick)
+        {
+            Vector3D quickright = vector3d(0, 0, 0);
+            quickright.x = right.x * 2;
+            quickright.y = right.y * 2;
+            quickright.z = right.z * 2;
+            vector3d_add(self->position, self->position, -quickright);
+        }
+        else
+        {
+            vector3d_add(self->position, self->position, -right);
+        }
+    }
+    if (keys[SDL_SCANCODE_1])
+    {
+        if (!(self->magicmcd > 0))
+        {
+            Vector3D direction = vector3d(0, 0, 0);
+            Vector3D positionshifted = vector3d(0, 0, 0);
+            positionshifted = self->position;
+            positionshifted.z += -10;
+            float pitchRad = self->rotation.x * (M_PI / 180.0f);
+            float rollRad = self->rotation.y * (M_PI / 180.0f);
+            float yawRad = self->rotation.z * (M_PI / 180.0f);
+            self->magicmcd = 0.5f;
+
+
+            direction.x = cos(yawRad) * cos(pitchRad);
+            direction.y = sin(pitchRad);
+            direction.z = sin(yawRad) * cos(pitchRad);
+
+
+            vector3d_normalize(&direction);
+            ability_cast_magic_missile(positionshifted, direction);
+        }
+    }
+    if (keys[SDL_SCANCODE_2])
+    {
+        if (!(self->magicacd > 0))
+        {
+            Vector3D direction = vector3d(0, 0, 0);
+            Vector3D positionshifted = vector3d(0, 0, 0);
+            positionshifted = self->position;
+            positionshifted.z += -10;
+            float pitchRad = self->rotation.x * (M_PI / 180.0f);
+            float rollRad = self->rotation.y * (M_PI / 180.0f);
+            float yawRad = self->rotation.z * (M_PI / 180.0f);
+            self->magicacd = 0.5f;
+
+
+            direction.x = cos(yawRad) * cos(pitchRad);
+            direction.y = sin(pitchRad);
+            direction.z = sin(yawRad) * cos(pitchRad);
+
+
+            vector3d_normalize(&direction);
+            ability_cast_magic_arc(positionshifted, direction);
+        }
+    }
+    if (keys[SDL_SCANCODE_3])
+    {
+        if (!(self->firebcd > 0))
+        {
+            Vector3D direction = vector3d(0, 0, 0);
+            Vector3D positionshifted = vector3d(0, 0, 0);
+            positionshifted = self->position;
+            positionshifted.z += -10;
+            float pitchRad = self->rotation.x * (M_PI / 180.0f);
+            float rollRad = self->rotation.y * (M_PI / 180.0f);
+            float yawRad = self->rotation.z * (M_PI / 180.0f);
+            self->firebcd = 0.5f;
+
+
+            direction.x = cos(yawRad) * cos(pitchRad);
+            direction.y = sin(pitchRad);
+            direction.z = sin(yawRad) * cos(pitchRad);
+
+
+            vector3d_normalize(&direction);
+            ability_cast_fireblast(positionshifted, direction);
+        }
+    }
+    if (keys[SDL_SCANCODE_4])
+    {
+        if (!(self->icebcd > 0))
+        {
+            Vector3D direction = vector3d(0, 0, 0);
+            Vector3D positionshifted = vector3d(0, 0, 0);
+            positionshifted = self->position;
+            positionshifted.z += -10;
+            float pitchRad = self->rotation.x * (M_PI / 180.0f);
+            float rollRad = self->rotation.y * (M_PI / 180.0f);
+            float yawRad = self->rotation.z * (M_PI / 180.0f);
+            self->icebcd = 0.5f;
+
+
+            direction.x = cos(yawRad) * cos(pitchRad);
+            direction.y = sin(pitchRad);
+            direction.z = sin(yawRad) * cos(pitchRad);
+
+
+            vector3d_normalize(&direction);
+            ability_cast_icebolt(positionshifted, direction);
+        }
+    }
+    if (keys[SDL_SCANCODE_5])
+    {
+        if (!(self->paracd > 0))
+        {
+            Vector3D direction = vector3d(0, 0, 0);
+            Vector3D positionshifted = vector3d(0, 0, 0);
+            positionshifted = self->position;
+            positionshifted.z += -10;
+            float pitchRad = self->rotation.x * (M_PI / 180.0f);
+            float rollRad = self->rotation.y * (M_PI / 180.0f);
+            float yawRad = self->rotation.z * (M_PI / 180.0f);
+            self->paracd = 0.5f;
+
+
+            direction.x = cos(yawRad) * cos(pitchRad);
+            direction.y = sin(pitchRad);
+            direction.z = sin(yawRad) * cos(pitchRad);
+
+
+            vector3d_normalize(&direction);
+            ability_cast_paralysis(positionshifted, direction);
+        }
+    }
+    if (keys[SDL_SCANCODE_6])
+    {
+        if (!(self->telecd > 0))
+        {
+            Vector3D direction = vector3d(0, 0, 0);
+            float yawRad = self->rotation.z * (M_PI / 180.0f); 
+            self->telecd = 0.5f;
+
+            direction.x = cos(yawRad);
+            direction.y = sin(yawRad);
+            direction.z = 0;
+
+
+            vector3d_normalize(&direction);
+            ability_cast_teleport(self, direction);
+        }
+    }
+    if (keys[SDL_SCANCODE_7])
+    {
+        if (!(self->slowcd > 0))
+        {
+            ability_cast_slow_fall(self);
+        }
+    }
+    if (keys[SDL_SCANCODE_8])
+    {
+        if (!(self->quickcd > 0))
+        {
+            ability_cast_quick_speed(self);
+        }
+    }
+    if (keys[SDL_SCANCODE_9])
+    {
+        if (!(self->reversecd > 0))
+        {
+            ability_cast_reverse_gravity(self);
+        }
     }
     // jump
-    if (keys[SDL_SCANCODE_SPACE] && self->grounded)
+    if (keys[SDL_SCANCODE_SPACE])
     {
-        slog("button pressed");
-        self->grounded = 0; 
-        self->velocity.z = -10; 
-        self->jumpCooldown = 0.5f;
+        if (self->jumpCooldown <= 0)
+        {
+            //slog("Grounded: %d, NumJumps: %d", self->grounded, self->numjumps);
+            if (self->grounded)
+            {
+                //slog("I jumped");
+                self->velocity.z = -110;
+                self->grounded = 0;
+                self->numjumps = 2;
+                self->jumpCooldown = 1.0f;
+            }
+            else if (self->numjumps > 0)
+            {
+                //slog("I jumped again");
+                self->velocity.z = -110;
+                self->numjumps -= 1;
+            }
+        }
     }
     // go down
     // if (keys[SDL_SCANCODE_Z])self->position.z += 1;
@@ -109,46 +322,87 @@ void player_think(Entity* self)
         cameraRotation.x += (mouse.y * 0.001);
         gf3d_camera_set_rotation(cameraRotation);
     }
-
-    if (keys[SDL_SCANCODE_F3])
-    {
-        thirdPersonMode = !thirdPersonMode;
-        self->hidden = !self->hidden;
-    }
 }
 
-void player_update(Entity* self, float deltaTime)
+void player_update(Entity* self, float deltaTime) 
 {
-    //slog("deltaTime: %f", deltaTime);
+    const float fixedTimestep = 1.0f / 120.0f;
     World* world = get_world();
-    if (!self) return;
-
-    self->boundingBox.min = get_Bounding_Box_Min(self->size, self->position);
-    self->boundingBox.max = get_Bounding_Box_Max(self->size, self->position);
-    if (self->jumpCooldown > 0.0f)
+    
+    self->magicmcd -= fixedTimestep;
+    self->firebcd -= fixedTimestep;
+    self->magicacd -= fixedTimestep;
+    self->icebcd -= fixedTimestep;
+    self->paracd -= fixedTimestep;
+    self->jumpCooldown -= fixedTimestep;
+    self->telecd -= fixedTimestep;
+    if (self->slowcd > 0)
     {
-        self->jumpCooldown -= deltaTime;
-        //slog("jumpCooldown: %f", self->jumpCooldown);
-    }
-    if (!self->grounded && self->jumpCooldown <= 0)
-    {
-        slog("not grounded yet");
-        self->velocity.z += GRAVITY; 
+        self->slowcd -= fixedTimestep;
     }
     else
     {
-        //slog("grounded");
-        self->velocity.z = 0;
-        self->position.z = world->worldBoundingBox.min.z - self->size.z / 2; 
-        //self->velocity.z *= 1000.0f; // Apply damping to the velocity
+        self->slow = 0;
+    }
+    if (self->quickcd > 0)
+    {
+        self->quickcd -= fixedTimestep;
+    }
+    else
+    {
+        self->quick = 0;
+    }
+    if (self->reversecd > 0)
+    {
+        self->reversecd -= fixedTimestep;
+    }
+    else
+    {
+        self->reverse = 0;
     }
 
-    self->position.x += self->velocity.x * deltaTime;
-    self->position.y += self->velocity.y * deltaTime;
-    self->position.z += self->velocity.z * deltaTime;
+    if (!self->grounded)
+    {
+        if (self->slow)
+        {
+            self->velocity.z += (GRAVITY/10) * fixedTimestep;
+        }
+        else if (self->reverse)
+        {
+            self->velocity.z += -(GRAVITY)*fixedTimestep;
+        }
+        else
+        {
+            self->velocity.z += (GRAVITY) * fixedTimestep;
+        }
+    }
 
-   
-    
+    Vector3D nextPosition = self->position;
+    nextPosition.x += self->velocity.x * fixedTimestep;
+    nextPosition.y += self->velocity.y * fixedTimestep;
+    nextPosition.z += self->velocity.z * fixedTimestep;
+
+    if (check_collision_with_world(nextPosition, world) && !self->grounded) 
+    {
+        handle_collision_response(self,  nextPosition, world);
+        //slog("Grounded: %f, %f, %f, %d", self->position.x, self->position.y, self->position.z, self->grounded);
+    }
+    else
+    {
+        //slog("Iam here");
+        platform_collision(self, nextPosition);
+        if (!self->grounded)
+        {
+            self->position = nextPosition;
+        }
+    }
+    if (self->position.z > 150) 
+    {
+        self->position = vector3d(0.000000, 0.000000, 75.517830);
+    }
+    self->boundingBox.min = get_Bounding_Box_Min(self->size, self->position);
+    self->boundingBox.max = get_Bounding_Box_Max(self->size, self->position);
+
     //slog("Current position %f, %f, %f, health: %d", self->position.x, self->position.y, self->position.z, self->health);
 
     Vector3D cameraOffset = { 0, 100, -50 }; 

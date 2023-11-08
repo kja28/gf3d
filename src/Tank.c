@@ -3,7 +3,7 @@
 #include "world.h"
 #include "player.h"
 
-#define GRAVITY -0.0000000000000000000981f
+#define GRAVITY 9.81f
 void tank_update(Entity* self, float deltaTime);
 
 void tank_think(Entity* self);
@@ -28,6 +28,7 @@ Entity* tank_new(Vector3D position)
     ent->health = 40;
     ent->speed = 0.5f;
     ent->damage = 7;
+    ent->velocity = vector3d(2, 2, 2);
     ent->state = ES_idle;
     ent->rotation.x = GFC_PI;
     ent->size = gf3d_get_model_size_from_obj("models/Enemy/ICE.obj");
@@ -39,30 +40,32 @@ Entity* tank_new(Vector3D position)
 
 void tank_update(Entity* self, float deltaTime)
 {
-    if (!self)
-    {
-        slog("self pointer not provided");
-        return;
-    }
+    const float fixedTimestep = 1.0f / 120.0f;
     World* world = get_world();
-
-    self->boundingBox.min = get_Bounding_Box_Min(self->size, self->position);
-    self->boundingBox.max = get_Bounding_Box_Max(self->size, self->position);
+    //slog("Grounded: %f, %f, %f, %d", self->position.x, self->position.y, self->position.z, self->grounded);
     if (!self->grounded)
     {
-        //slog("not grounded yet");
-        self->velocity.z = GRAVITY;
+        self->velocity.z += GRAVITY * fixedTimestep;
+    }
+
+
+    Vector3D nextPosition = self->position;
+    nextPosition.x += self->velocity.x * fixedTimestep;
+    nextPosition.y += self->velocity.y * fixedTimestep;
+    nextPosition.z += self->velocity.z * fixedTimestep;
+
+
+    if (check_collision_with_world(nextPosition, world))
+    {
+        handle_collision_response(self, nextPosition, world);
     }
     else
     {
-        //slog("grounded");
-        self->position.z = world->worldBoundingBox.min.z - self->size.z / 2; 
-        //self->velocity.z *= 1000.0f; // Apply damping to the velocity
+        self->position = nextPosition;
     }
 
-    self->position.x += self->velocity.x * deltaTime;
-    self->position.y += self->velocity.y * deltaTime;
-    self->position.z += self->velocity.z * deltaTime;
+    self->boundingBox.min = get_Bounding_Box_Min(self->size, self->position);
+    self->boundingBox.max = get_Bounding_Box_Max(self->size, self->position);
 
 }
 
@@ -135,7 +138,14 @@ void hunt_player_tank(Entity* self, Vector3D playerPosition)
     vector3d_sub(direction, playerPosition, self->position);
     vector3d_normalize(&direction);
 
-    vector3d_scale(self->velocity, -direction, 0.000000000000000000005f);
+    if (self->frost)
+    {
+        vector3d_scale(self->velocity, direction, 20.0f);
+    }
+    else
+    {
+        vector3d_scale(self->velocity, direction, 100.0f);
+    }
 }
 
 void enemy_dead_tank(Entity* self)

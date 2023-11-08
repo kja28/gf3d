@@ -3,7 +3,7 @@
 
 #include "entity.h"
 
-#define TANK_ATTACK_RANGE 100.0f  
+#define TANK_ATTACK_RANGE 50.0f  
 #define TANK_DETECT_RANGE 200.0f 
 #define KNOCKBACK_FORCE 10.0f
         

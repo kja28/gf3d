@@ -39,22 +39,32 @@ Entity* flying_new(Vector3D position)
 
 void flying_update(Entity* self, float deltaTime)
 {
-    if (!self)
-    {
-        slog("self pointer not provided");
-        return;
-    }
+    const float fixedTimestep = 1.0f / 120.0f;
     World* world = get_world();
+    //slog("Grounded: %f, %f, %f, %d", self->position.x, self->position.y, self->position.z, self->grounded);
+    if (!self->grounded)
+    {
+        self->velocity.z += GRAVITY * fixedTimestep;
+    }
+
+
+    Vector3D nextPosition = self->position;
+    nextPosition.x += self->velocity.x * fixedTimestep;
+    nextPosition.y += self->velocity.y * fixedTimestep;
+    nextPosition.z += self->velocity.z * fixedTimestep;
+
+    if (check_collision_with_world(nextPosition, world))
+    {
+        handle_collision_response(self, nextPosition, world);
+    }
+    else
+    {
+        self->position = nextPosition;
+    }
+
 
     self->boundingBox.min = get_Bounding_Box_Min(self->size, self->position);
     self->boundingBox.max = get_Bounding_Box_Max(self->size, self->position);
-    
-
-    self->position.x += self->velocity.x * deltaTime;
-    self->position.y += self->velocity.y * deltaTime;
-    self->position.z += self->velocity.z * deltaTime;
-    //slog("Flying position : %f, %f, %f", self->position.x, self->position.y, self->position.z);
-
 }
 
 void flying_think(Entity* self)

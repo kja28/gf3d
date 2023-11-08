@@ -102,6 +102,7 @@ void world_add_entity(World* world, Vector3D position) {
     }
     entity->model = gf3d_model_load("models/platform.model");
     entity->position = position;
+    entity->platform = 1;
     entity->size = gf3d_get_model_size_from_obj("models/antioch/platform.obj");
     entity->boundingBox.min = get_Bounding_Box_Min(entity->size, entity->position);
     entity->boundingBox.max = get_Bounding_Box_Max(entity->size, entity->position);
