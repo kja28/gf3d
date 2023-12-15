@@ -13,10 +13,22 @@ void gf3d_camera_get_view_mat4(Matrix4 *view)
     memcpy(view,gf3d_camera.cameraMat,sizeof(Matrix4));
 }
 
+void gf3d_camera_get_inverse_view_mat4(Matrix4* view)
+{
+    if (!view)return;
+    memcpy(view, gf3d_camera.inverseCameraMat, sizeof(Matrix4));
+}
+
 void gf3d_camera_set_view_mat4(Matrix4 *view)
 {
     if (!view)return;
     memcpy(gf3d_camera.cameraMat,view,sizeof(Matrix4));
+}
+
+void gf3d_camera_set_inverse_view_mat4(Matrix4* view)
+{
+    if (!view)return;
+    memcpy(gf3d_camera.inverseCameraMat, view, sizeof(Matrix4));
 }
 
 void gf3d_camera_look_at(
@@ -69,6 +81,22 @@ void gf3d_camera_update_view()
     gf3d_camera.cameraMat[3][0] = vector3d_dot_product(xaxis, position);
     gf3d_camera.cameraMat[3][1] = vector3d_dot_product(yaxis, position);
     gf3d_camera.cameraMat[3][2] = vector3d_dot_product(zaxis, position);
+
+    gf3d_camera.inverseCameraMat[0][0] = xaxis.x;
+    gf3d_camera.inverseCameraMat[0][1] = yaxis.x;
+    gf3d_camera.inverseCameraMat[0][2] = zaxis.x;
+
+    gf3d_camera.inverseCameraMat[1][0] = xaxis.z;
+    gf3d_camera.inverseCameraMat[1][1] = yaxis.z;
+    gf3d_camera.inverseCameraMat[1][2] = zaxis.z;
+
+    gf3d_camera.inverseCameraMat[2][0] = -xaxis.y;
+    gf3d_camera.inverseCameraMat[2][1] = -yaxis.y;
+    gf3d_camera.inverseCameraMat[2][2] = -zaxis.y;
+
+    gf3d_camera.inverseCameraMat[3][0] = position.x;
+    gf3d_camera.inverseCameraMat[3][1] = position.y;
+    gf3d_camera.inverseCameraMat[3][2] = position.z;
         
 }
 
@@ -77,6 +105,7 @@ void gf3d_camera_set_position(Vector3D position)
     gf3d_camera.position.x = -position.x;
     gf3d_camera.position.y = -position.y;
     gf3d_camera.position.z = -position.z;
+
 }
 
 void gf3d_camera_set_rotation(Vector3D rotation)

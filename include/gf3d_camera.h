@@ -6,6 +6,7 @@
 typedef struct
 {
     Matrix4 cameraMat;      //final matrix to become the view matrix
+    Matrix4 inverseCameraMat; // inverse Matrix for specular lighting
     Vector3D scale;
     Vector3D position;
     Vector3D rotation;      // pitch, roll, yaw
@@ -24,10 +25,22 @@ void gf3d_camera_update_view();
  */
 void gf3d_camera_get_view_mat4(Matrix4 *view);
 
+
+/**
+ * @brief get the current inverse camera view, this is done to include specular lighting
+ * @param view output, the matrix provided will be populated with the current inverse camera information
+ */
+void gf3d_camera_get_inverse_view_mat4(Matrix4* view);
+
 /**
  * @brief set the current camera based on the matrix provided
  */
 void gf3d_camera_set_view_mat4(Matrix4 *view);
+
+/**
+ * @brief set the current inverse camera based on the matrix provided
+ */
+void gf3d_camera_set_inverse_view_mat4(Matrix4* view);
 
 /**
  * @brief set the camera properties based on position and direction that the camera should be looking

@@ -145,6 +145,7 @@ void gf3d_vgraphics_init(const char *config)
 
     gfc_matrix_identity(gf3d_vgraphics.ubo.model);
     gfc_matrix_identity(gf3d_vgraphics.ubo.view);
+    gfc_matrix_identity(gf3d_vgraphics.ubo.inverseView);
     gfc_matrix_identity(gf3d_vgraphics.ubo.proj);
     
     gfc_matrix_perspective(
@@ -582,6 +583,11 @@ uint32_t gf3d_vgraphics_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFl
 Matrix4 *gf3d_vgraphics_get_view_matrix()
 {
     return &gf3d_vgraphics.ubo.view;
+}
+
+Matrix4* gf3d_vgraphics_get_inverse_view_matrix()
+{
+    return &gf3d_vgraphics.ubo.inverseView;
 }
 
 void gf3d_vgraphics_rotate_camera(float degrees)

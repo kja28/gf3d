@@ -27,6 +27,7 @@
 #include "player.h"
 #include "world.h"
 #include "Collectables.h"
+#include "menu.h"
 
 extern int __DEBUG;
 
@@ -101,7 +102,11 @@ int main(int argc,char *argv[])
     sky = gf3d_model_load("models/sky.model");
     gfc_matrix_identity(skyMat);
     gfc_matrix_scale(skyMat,vector3d(100,100,100));
-    
+
+    /*
+    GameState gameState = MENU;
+    */
+
     // main game loop
     slog("gf3d main loop begin");
     while(!done)
@@ -131,6 +136,27 @@ int main(int argc,char *argv[])
         entity_update_all(deltaTime);
         gf3d_camera_update_view();
         gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
+        gf3d_camera_get_inverse_view_mat4(gf3d_vgraphics_get_inverse_view_matrix());
+
+        /*
+        switch (gameState)
+        {
+        case MENU:
+            menu_update();
+            menu_draw();
+            if (startButtonPressed)
+            {
+                gameState = GAME;
+            }
+            break;
+
+        case GAME:
+            // Game update and rendering
+            break;
+
+            // other cases
+        }
+        */
 
         gf3d_vgraphics_render_start();
 

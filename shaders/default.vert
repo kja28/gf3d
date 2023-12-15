@@ -6,28 +6,31 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
     vec4 color;
+    vec4 ambient;
 } ubo;
 
-out gl_PerVertex
-{
+out gl_PerVertex {
     vec4 gl_Position;
 };
 
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inNormal;
 layout(location = 2) in vec2 inTexCoord;
+
 layout(location = 0) out vec3 fragNormal;
 layout(location = 1) out vec2 fragTexCoord;
 layout(location = 2) out vec4 colorMod;
 layout(location = 3) out vec4 fragAmbient;
+layout(location = 4) out vec3 fragPosWorld;
 
-void main()
-{
-    vec4 tempNormal;
-    tempNormal = ubo.model * vec4(inNormal,1.0);
+void main() {
+    vec4 worldPos = ubo.model * vec4(inPosition, 1.0);
+    fragPosWorld = worldPos.xyz;
+    vec4 tempNormal = ubo.model * vec4(inNormal, 0.0);
     fragNormal = normalize(tempNormal.xyz);
-    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPosition, 1.0);
+    gl_Position = ubo.proj * ubo.view * worldPos;
     fragTexCoord = inTexCoord;
     colorMod = ubo.color;
     fragAmbient = ubo.ambient;
 }
+

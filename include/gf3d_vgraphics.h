@@ -63,6 +63,12 @@ void gf3d_vgraphics_rotate_camera(float degrees);
  */
 Matrix4 *gf3d_vgraphics_get_view_matrix();
 
+/**
+ * @brief get the inverse matrix used for rendering the view
+ * @return the inverse view matrix sent to every rendering call
+ */
+Matrix4* gf3d_vgraphics_get_inverse_view_matrix();
+
 
 VkBuffer gf3d_vgraphics_get_uniform_buffer_by_index(Uint32 index);
 
