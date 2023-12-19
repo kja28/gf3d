@@ -6,13 +6,25 @@
 #include "world.h"
 #include "gf2d_font.h"
 #include "Abilities.h"
+#include "gamestate.h"
 
 #define GRAVITY 90.81f
 
 static int thirdPersonMode = 1;
+static Pressed = 0;
 Entity* global_player = NULL;
+int animationFrames = 30;
+Model* keyframes[31];
+int playAnimation = 0;
+int stopAnimation = 1;
 void player_think(Entity *self);
-void player_update(Entity *self, float deltaTime);
+void player_update(Entity *self);
+float frameTimer = 0;
+float frameDuration = 1.0f/15.0f;
+int currentFrame = 0;
+GameState currentGameState;
+
+
 
 Entity *player_new(Vector3D position)
 {
@@ -25,7 +37,7 @@ Entity *player_new(Vector3D position)
         return NULL;
     }
     
-    ent->model = gf3d_model_load("models/dino.model");
+    ent->model = gf3d_model_load("models/dino_1.model");
     ent->think = player_think;
     ent->update = player_update;
     ent->player = 1;
@@ -43,11 +55,18 @@ Entity *player_new(Vector3D position)
     ent->acceleration = Vector3D_Zero();
     ent->acceleration.z = GRAVITY;
     ent->rotation.x = -GFC_PI;
+    ent->rotation.y = GFC_HALF_PI;
     ent->rotation.z = -GFC_HALF_PI*0.125;
     ent->health = 40;
     ent->hidden = 0;
     ent->numjumps = 3;
     global_player = ent;
+    char modelPath[1024];
+    for (int i = 1; i < animationFrames; i++)
+    {
+        snprintf(modelPath, sizeof(modelPath), "models/dino_%d.model", i);
+        keyframes[i] = gf3d_model_load(modelPath);
+    }
     return ent;
 }
 
@@ -61,6 +80,7 @@ void player_think(Entity* self)
     SDL_GetRelativeMouseState(&mx, &my);
     const Uint8* keys;
     keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
+    int justPressed = keys[SDL_SCANCODE_M];
 
     mouse.x = mx;
     mouse.y = my;
@@ -80,10 +100,22 @@ void player_think(Entity* self)
             quickforward.y = forward.y * 2;
             quickforward.z = forward.z * 2;
             vector3d_add(self->position, self->position, -quickforward);
+            playAnimation = 1;
+            stopAnimation = 0;
         }
         else
         {
             vector3d_add(self->position, self->position, -forward);
+            playAnimation = 1;
+            stopAnimation = 0;
+        }
+    }
+    else
+    {
+        if (playAnimation)
+        {
+            stopAnimation = 1;
+            playAnimation = 0;
         }
     }
     //backward
@@ -133,6 +165,26 @@ void player_think(Entity* self)
         {
             vector3d_add(self->position, self->position, -right);
         }
+    }
+    if (keys[SDL_SCANCODE_M]) 
+    { 
+        if (justPressed && !Pressed)
+        {
+            if (currentGameState == GAME_STATE_PLAYING)
+            {
+                currentGameState = GAME_STATE_MENU;
+            }
+            else if (currentGameState == GAME_STATE_MENU)
+            {
+                currentGameState = GAME_STATE_PLAYING;
+            }
+            Pressed = 1;
+        }
+        
+    }
+    else if (!justPressed)
+    {
+        Pressed = 0;
     }
     if (keys[SDL_SCANCODE_1])
     {
@@ -324,7 +376,7 @@ void player_think(Entity* self)
     }
 }
 
-void player_update(Entity* self, float deltaTime) 
+void player_update(Entity* self) 
 {
     const float fixedTimestep = 1.0f / 120.0f;
     World* world = get_world();
@@ -336,6 +388,26 @@ void player_update(Entity* self, float deltaTime)
     self->paracd -= fixedTimestep;
     self->jumpCooldown -= fixedTimestep;
     self->telecd -= fixedTimestep;
+
+    if (playAnimation)
+    {
+        frameTimer += fixedTimestep;
+        if (frameTimer >= frameDuration)
+        {
+            frameTimer = 0;
+            currentFrame++;
+            if (currentFrame >= animationFrames) currentFrame = 0;
+            self->model = keyframes[currentFrame];
+            slog("this is running");
+        }
+    }
+    else if (!stopAnimation)
+    {
+        currentFrame = 0;
+        self->model = keyframes[currentFrame];
+        stopAnimation = 1;
+    }
+
     if (self->slowcd > 0)
     {
         self->slowcd -= fixedTimestep;

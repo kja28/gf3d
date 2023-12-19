@@ -6,6 +6,7 @@
 #include "gfc_primitives.h"
 
 #include "gf3d_model.h"
+#include "gf2d_sprite.h"
 
 typedef struct World World;
 
@@ -94,6 +95,11 @@ typedef struct Entity_S
     
     // WHATEVER ELSE WE MIGHT NEED FOR ENTITIES
     struct Entity_S *target;    /**<entity to target for weapons / ai*/
+
+    Sprite* menu; // Added to hold the sprite for the main menu
+    Sprite* button; // Added to hold the sprite for the buttons
+    Vector2D buttonSize;
+    Vector2D buttonPosition;
     
     void *customData;   /**<IF an entity needs to keep track of extra data, we can do it here*/
     struct {

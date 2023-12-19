@@ -17,6 +17,7 @@
 #include "gf2d_font.h"
 #include "gf2d_draw.h"
 
+#include "SDL_mixer.h"
 #include "entity.h"
 #include "agumon.h"
 #include "Flying.h"
@@ -28,8 +29,10 @@
 #include "world.h"
 #include "Collectables.h"
 #include "menu.h"
+#include "gamestate.h"
 
 extern int __DEBUG;
+GameState currentGameState = GAME_STATE_MENU;
 
 int main(int argc,char *argv[])
 {
@@ -52,6 +55,8 @@ int main(int argc,char *argv[])
     Particle particle[100];
     Matrix4 skyMat;
     Model *sky;
+    Entity* menu;
+    
 
     for (a = 1; a < argc;a++)
     {
@@ -97,15 +102,20 @@ int main(int argc,char *argv[])
     slog_sync();
     gf3d_camera_set_scale(vector3d(1,1,1));
     player_new(vector3d(0.000000, 0.000000, 75.517830));
+
+    // add music
+    SDL_Init(SDL_INIT_AUDIO);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    Mix_Music* bgMusic = Mix_LoadMUS("music/sample_background.mp3");
+    Mix_PlayMusic(bgMusic, -1);
     
     a = 0;
     sky = gf3d_model_load("models/sky.model");
     gfc_matrix_identity(skyMat);
     gfc_matrix_scale(skyMat,vector3d(100,100,100));
 
-    /*
-    GameState gameState = MENU;
-    */
+    // initialize menu
+    menu = menu_init("images/sample_menu.jpg", "images/sample_button.png", vector2d(100, 100), vector2d(200, 50));
 
     // main game loop
     slog("gf3d main loop begin");
@@ -138,25 +148,7 @@ int main(int argc,char *argv[])
         gf3d_camera_get_view_mat4(gf3d_vgraphics_get_view_matrix());
         gf3d_camera_get_inverse_view_mat4(gf3d_vgraphics_get_inverse_view_matrix());
 
-        /*
-        switch (gameState)
-        {
-        case MENU:
-            menu_update();
-            menu_draw();
-            if (startButtonPressed)
-            {
-                gameState = GAME;
-            }
-            break;
-
-        case GAME:
-            // Game update and rendering
-            break;
-
-            // other cases
-        }
-        */
+        
 
         gf3d_vgraphics_render_start();
 
@@ -174,8 +166,32 @@ int main(int argc,char *argv[])
                 gf2d_font_draw_line_tag("Press ALT+F4 to exit",FT_H1,gfc_color(1,1,1,1), vector2d(10,10));
                 
                 gf2d_draw_rect(gfc_rect(10 ,10,1000,32),gfc_color8(255,255,255,255));
-                gf2d_sprite_draw(mouse,vector2d(mousex,mousey),vector2d(2,2),vector3d(8,8,0),gfc_color(0.3,.9,1,0.9),(Uint32)mouseFrame);
                 updateUI();
+                switch (currentGameState)
+                {
+                case GAME_STATE_MENU:
+                    menu_draw(menu);
+                    gf2d_font_draw_line_tag("Use WASD to move", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 50));
+                    gf2d_font_draw_line_tag("Use space to jump and in air to double jump", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 100));
+                    gf2d_font_draw_line_tag("Click 1 to shoot a missile", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 150));
+                    gf2d_font_draw_line_tag("Click 2 to shoot an arc", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 200));
+                    gf2d_font_draw_line_tag("Click 3 to shoot a blast", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 250));
+                    gf2d_font_draw_line_tag("Click 4 to shoot an ice bolt", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 300));
+                    gf2d_font_draw_line_tag("Click 5 to paralyze", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 350));
+                    gf2d_font_draw_line_tag("Click 6 to teleport", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 400));
+                    gf2d_font_draw_line_tag("Click 7 to slow fall", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 450));
+                    gf2d_font_draw_line_tag("Click 8 to get a speed boost", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 500));
+                    gf2d_font_draw_line_tag("Click 9 to reverse gravity", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 550));
+                    gf2d_font_draw_line_tag("Click M to open and close menu", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 600));
+                    gf2d_font_draw_line_tag("Alt + F4 to close the game", FT_H1, gfc_color(1, 1, 1, 1), vector2d(150, 650));
+
+                    Mix_PauseMusic();
+                    break;
+                case GAME_STATE_PLAYING:
+                    Mix_ResumeMusic();
+                    break;
+                }
+                gf2d_sprite_draw(mouse, vector2d(mousex, mousey), vector2d(2, 2), vector3d(8, 8, 0), gfc_color(0.3, .9, 1, 0.9), (Uint32)mouseFrame);
         gf3d_vgraphics_render_end();
         
         //slog("This is deltatime: %.6f", deltaTime);
@@ -194,6 +210,9 @@ int main(int argc,char *argv[])
     //cleanup
     slog("gf3d program end");
     slog_sync();
+    Mix_FreeMusic(bgMusic);
+    Mix_CloseAudio();
+    SDL_Quit();
     return 0;
 }
 

@@ -1,0 +1,7 @@
+{
+    "model":
+    {
+        "model":"models/dino/dino_25.obj",
+        "texture":"models/dino/dino.png"
+    }
+}
