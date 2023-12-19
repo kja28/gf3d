@@ -404,10 +404,10 @@ void player_update(Entity* self)
             slog("this is running");
         }
     }
-    else if (!stopAnimation)
+    else 
     {
-        currentFrame = 0;
-        self->model = keyframes[0];
+        currentFrame = 1;
+        self->model = keyframes[1];
         stopAnimation = 1;
     }
 
