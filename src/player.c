@@ -20,7 +20,7 @@ int stopAnimation = 1;
 void player_think(Entity *self);
 void player_update(Entity *self);
 float frameTimer = 0;
-float frameDuration = 1.0f/15.0f;
+float frameDuration = 1.0f/25.0f;
 int currentFrame = 0;
 GameState currentGameState;
 
