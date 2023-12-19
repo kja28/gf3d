@@ -20,7 +20,7 @@ int stopAnimation = 1;
 void player_think(Entity *self);
 void player_update(Entity *self);
 float frameTimer = 0;
-float frameDuration = 1.0f/25.0f;
+float frameDuration = 1.0f/20.0f;
 int currentFrame = 0;
 GameState currentGameState;
 
@@ -396,7 +396,10 @@ void player_update(Entity* self)
         {
             frameTimer = 0;
             currentFrame++;
-            if (currentFrame >= animationFrames) currentFrame = 0;
+            if (currentFrame >= animationFrames - 3)
+            {
+                currentFrame = 3;
+            }
             self->model = keyframes[currentFrame];
             slog("this is running");
         }
@@ -404,7 +407,7 @@ void player_update(Entity* self)
     else if (!stopAnimation)
     {
         currentFrame = 0;
-        self->model = keyframes[currentFrame];
+        self->model = keyframes[0];
         stopAnimation = 1;
     }
 
